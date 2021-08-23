@@ -1,17 +1,26 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import App from "./App";
+import { FirebaseAppProvider } from "reactfire";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBS94b0-stcifeAUxCJmKwuLTyGdWgXRE8",
+  authDomain: "log-pain.firebaseapp.com",
+  projectId: "log-pain",
+  databaseURL:
+    "https://log-pain-default-rtdb.europe-west1.firebasedatabase.app",
+  storageBucket: "log-pain.appspot.com",
+  messagingSenderId: "319120349529",
+  appId: "1:319120349529:web:3344ba51005f3753a51448",
+  measurementId: "G-20DX1RRWSR",
+};
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <FirebaseAppProvider firebaseConfig={firebaseConfig}>
+      <App />
+    </FirebaseAppProvider>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById("root")
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();

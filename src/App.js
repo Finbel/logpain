@@ -1,24 +1,45 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import {
+  Container,
+  Typography,
+  Box,
+  Tabs,
+  Tab,
+  AppBar,
+} from "@material-ui/core";
+import useLogs from "./utils/useLogs";
+import PainForm from "./components/PainForm";
+import Chart from "./components/Chart";
 
 function App() {
+  const { loading } = useLogs();
+  const [value, setValue] = useState(0);
+
+  if (loading) {
+    return <div>loading</div>;
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container>
+      <Box p={4}>
+        <Typography variant="h3" gutterBottom>
+          Log pain
+        </Typography>
+      </Box>
+      <Tabs
+        value={value}
+        onChange={(event, newValue) => setValue(newValue)}
+        indicatorColor="primary"
+        textColor="primary"
+        variant="fullWidth"
+        aria-label="full width tabs example"
+      >
+        <Tab label="Form" />
+        <Tab label="Chart" />
+      </Tabs>
+      {value === 0 && <PainForm />}
+      {value === 1 && <Chart />}
+    </Container>
   );
 }
 
