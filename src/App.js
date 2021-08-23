@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  Container,
-  Typography,
-  Box,
-  Tabs,
-  Tab,
-  AppBar,
-} from "@material-ui/core";
+import { Container, Typography, Box, Tabs, Tab } from "@material-ui/core";
 import useLogs from "./utils/useLogs";
 import PainForm from "./components/PainForm";
 import Chart from "./components/Chart";
