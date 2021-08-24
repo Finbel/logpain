@@ -113,32 +113,7 @@ const PainForm = () => {
             </Select>
           </FormControl>
         </Grid>
-        <Grid item xs={12}>
-          <TextField
-            id="position"
-            label="Position"
-            type="text"
-            defaultValue={""}
-            onChange={(event) => {
-              console.log({ onChange: event.target.value });
-              setLog({ ...log, position: event.target.value });
-            }}
-            InputLabelProps={{
-              shrink: true,
-            }}
-          />
-          <Box m={1}>
-            <Button
-              onClick={() => {
-                addPosition({ position: log.position });
-              }}
-              variant="contained"
-              color="primary"
-            >
-              Add position
-            </Button>
-          </Box>
-        </Grid>
+
         <Grid item xs={12}>
           <TextField
             id="datetime-local"
@@ -163,6 +138,32 @@ const PainForm = () => {
               color="primary"
             >
               Save log
+            </Button>
+          </Box>
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            id="position"
+            label="Position"
+            type="text"
+            defaultValue={""}
+            onChange={(event) => {
+              console.log({ onChange: event.target.value });
+              setLog({ ...log, position: event.target.value });
+            }}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+          <Box m={1}>
+            <Button
+              onClick={() => {
+                addPosition({ position: log.position });
+              }}
+              variant="contained"
+              color="primary"
+            >
+              Add position
             </Button>
           </Box>
         </Grid>
