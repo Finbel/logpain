@@ -96,7 +96,6 @@ const PainForm = () => {
               native
               value={log.position}
               onChange={(event) => {
-                console.log(event.target.value);
                 setLog({ ...log, position: event.target.value });
               }}
               inputProps={{
@@ -147,7 +146,6 @@ const PainForm = () => {
             type="text"
             defaultValue={""}
             onChange={(event) => {
-              console.log({ onChange: event.target.value });
               setLog({ ...log, position: event.target.value });
             }}
             InputLabelProps={{
