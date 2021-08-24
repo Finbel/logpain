@@ -3,6 +3,7 @@ import { Container, Typography, Box, Tabs, Tab } from "@material-ui/core";
 import useLogs from "./utils/useLogs";
 import PainForm from "./components/PainForm";
 import Chart from "./components/Chart";
+import PillForm from "./components/PillForm";
 
 function App() {
   const { loading } = useLogs();
@@ -28,10 +29,12 @@ function App() {
         aria-label="full width tabs example"
       >
         <Tab label="Form" />
+        <Tab label="Meds" />
         <Tab label="Chart" />
       </Tabs>
       {value === 0 && <PainForm />}
-      {value === 1 && <Chart />}
+      {value === 1 && <PillForm />}
+      {value === 2 && <Chart />}
     </Container>
   );
 }
