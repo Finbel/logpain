@@ -64,8 +64,8 @@ const Chart = () => {
   };
 
   return (
-    <Box p={4} width={isMobile ? "3/4" : "2/3"}>
-      <ResponsiveContainer width={"100%"} height={isMobile ? 200 : 400}>
+    <div style={{ position: "relative", left: -350, top: 50 }}>
+      <ResponsiveContainer width={1800} height={900}>
         <LineChart
           data={logs}
           margin={{
@@ -98,8 +98,8 @@ const Chart = () => {
               ).toLocaleTimeString()}`
             }
           />
-          <YAxis domain={[0, 5]} />
-          <Legend formatter={legendFormatter} />
+          <YAxis domain={["auto", "auto"]} />
+          <Legend formatter={legendFormatter} height={36} />
           <Line type="monotone" dataKey="erectorSpinae" stroke="#FFB5E8" />
           <Line type="monotone" dataKey="lowerBack" stroke="#FF964F" />
           <Line type="monotone" dataKey="upperBack" stroke="#42E695" />
@@ -107,11 +107,11 @@ const Chart = () => {
           <Line type="monotone" dataKey="mind" stroke="#97A2FF" />
           {medications &&
             medications.map(({ time }) => (
-              <ReferenceLine x={time} stroke="blue" />
+              <ReferenceLine x={time} stroke="#72bcd4" strokeWidth={2} />
             ))}
         </LineChart>
       </ResponsiveContainer>
-    </Box>
+    </div>
   );
 };
 
