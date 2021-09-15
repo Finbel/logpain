@@ -8,16 +8,71 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  ReferenceLine,
 } from "recharts";
 import { useMediaQuery } from "@material-ui/core";
 import { useTheme } from "@material-ui/core/styles";
 import useLogs from "../../utils/useLogs";
-import useMedications from "../../utils/useMedications";
+
+const getValue = (log, key) => {
+  return Number(log?.[key]) || 0;
+};
+
+const getDateString = (time) => {
+  const date = new Date(time);
+  return date.toISOString().slice(0, 10);
+};
+
+const parseLogs = (logs) => {
+  const data1 = logs.map((log) => ({
+    average:
+      (getValue(log, "erectorSpinae") +
+        getValue(log, "lowerBack") +
+        getValue(log, "upperBack") +
+        getValue(log, "glutes")) /
+      4,
+    ...log,
+  }));
+  const dates = {};
+  let lastDay = getDateString(data1[0].time).slice(8, 10);
+  data1.forEach((log) => {
+    const dateString = getDateString(log.time);
+    const day = dateString.slice(8, 10);
+    const dayGap = Number(day) - Number(lastDay) - 1;
+    if (dayGap > 0) {
+      for (let index = 0; index < dayGap; index++) {
+        const missingDateString = `${dateString.slice(0, 8)}${
+          day - (index + 1)
+        }`;
+        dates[missingDateString] = [];
+      }
+    }
+    if (dates[dateString]) {
+      dates[dateString] = [...dates[dateString], log];
+    } else {
+      dates[dateString] = [log];
+    }
+    lastDay = day;
+  });
+  return Object.entries(dates).map(([key, value]) => {
+    const time = new Date(key).getTime();
+    let max = Math.max(...value.map((log) => log.average));
+    let min = Math.min(...value.map((log) => log.average));
+    if (max < 0) {
+      max = 0;
+    }
+    if (min > 10) {
+      min = 0;
+    }
+    const average =
+      value.reduce((sum, log) => sum + log.average, 0) / value.length || 0;
+    return { time, average, max, min };
+  });
+};
 
 const Chart = () => {
   const { logs } = useLogs();
-  const { medications } = useMedications();
+  // const { medications } = useMedications();
+  const data = parseLogs(logs);
   logs.sort((a, b) => {
     if (a < b) return -1;
     if (b > a) return 1;
@@ -64,10 +119,10 @@ const Chart = () => {
   };
 
   return (
-    <div style={{ position: "relative", left: -350, top: 50 }}>
-      <ResponsiveContainer width={1800} height={900}>
+    <div>
+      <ResponsiveContainer>
         <LineChart
-          data={logs}
+          data={data}
           margin={{
             top: 5,
             right: 0,
@@ -100,15 +155,16 @@ const Chart = () => {
           />
           <YAxis domain={["auto", "auto"]} />
           <Legend formatter={legendFormatter} height={36} />
-          <Line type="monotone" dataKey="erectorSpinae" stroke="#FFB5E8" />
-          <Line type="monotone" dataKey="lowerBack" stroke="#FF964F" />
-          <Line type="monotone" dataKey="upperBack" stroke="#42E695" />
-          <Line type="monotone" dataKey="glutes" stroke="#FF7676" />
-          <Line type="monotone" dataKey="mind" stroke="#97A2FF" />
-          {medications &&
+          <Line type="monotone" dataKey="average" stroke="#FFB5E8" />
+          {/* <Line type="monotone" dataKey="lowerBack" stroke="#FF964F" />
+          
+          <Line type="monotone" dataKey="glutes" stroke="#FF7676" />*/}
+          <Line type="monotone" dataKey="max" stroke="#FF7676" />
+          <Line type="monotone" dataKey="min" stroke="#42E695" />
+          {/* {medications &&
             medications.map(({ time }) => (
               <ReferenceLine x={time} stroke="#72bcd4" strokeWidth={2} />
-            ))}
+            ))} */}
         </LineChart>
       </ResponsiveContainer>
     </div>
