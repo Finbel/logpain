@@ -71,7 +71,6 @@ const parseLogs = (logs) => {
 
 const Chart = () => {
   const { logs } = useLogs();
-  // const { medications } = useMedications();
   const data = parseLogs(logs);
   logs.sort((a, b) => {
     if (a < b) return -1;
@@ -156,15 +155,8 @@ const Chart = () => {
           <YAxis domain={["auto", "auto"]} />
           <Legend formatter={legendFormatter} height={36} />
           <Line type="monotone" dataKey="average" stroke="#FFB5E8" />
-          {/* <Line type="monotone" dataKey="lowerBack" stroke="#FF964F" />
-          
-          <Line type="monotone" dataKey="glutes" stroke="#FF7676" />*/}
           <Line type="monotone" dataKey="max" stroke="#FF7676" />
           <Line type="monotone" dataKey="min" stroke="#42E695" />
-          {/* {medications &&
-            medications.map(({ time }) => (
-              <ReferenceLine x={time} stroke="#72bcd4" strokeWidth={2} />
-            ))} */}
         </LineChart>
       </ResponsiveContainer>
     </div>
