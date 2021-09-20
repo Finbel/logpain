@@ -1,13 +1,12 @@
 import React from "react";
 import {
-  ResponsiveContainer,
   Line,
   LineChart,
   XAxis,
   YAxis,
   CartesianGrid,
-  Tooltip,
   Legend,
+  Tooltip,
 } from "recharts";
 import { useMediaQuery } from "@material-ui/core";
 import { useTheme } from "@material-ui/core/styles";
@@ -63,9 +62,10 @@ const parseLogs = (logs) => {
     if (min > 10) {
       min = 0;
     }
+    const frequency = value.length;
     const average =
       value.reduce((sum, log) => sum + log.average, 0) / value.length || 0;
-    return { time, average, max, min };
+    return { time, average, max, min, frequency };
   });
 };
 
@@ -82,83 +82,73 @@ const Chart = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"), {
     defaultMatches: true,
   });
-
-  const legendFormatter = (value, entry, index) => {
-    switch (value) {
-      case "erectorSpinae":
-        return <span>Erector Spinae</span>;
-      case "lowerBack":
-        return <span>Lower Back</span>;
-      case "upperBack":
-        return <span>Upper Back</span>;
-      case "glutes":
-        return <span>Glutes</span>;
-      case "mind":
-        return <span>Mind</span>;
-      default:
-        return;
-    }
-  };
-
-  const tooltipFormatter = (value, entry, index) => {
-    switch (entry) {
-      case "erectorSpinae":
-        return [value, "Erector Spinae"];
-      case "lowerBack":
-        return [value, "Lower Back"];
-      case "upperBack":
-        return [value, "Upper Back"];
-      case "glutes":
-        return [value, "Glutes"];
-      case "mind":
-        return [value, "Mind"];
-      default:
-        return;
-    }
-  };
-
   return (
     <div>
-      <ResponsiveContainer>
-        <LineChart
-          data={data}
-          margin={{
-            top: 5,
-            right: 0,
-            left: 0,
-            bottom: 5,
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis
-            dataKey="time"
-            domain={["auto", "auto"]}
-            name="Time"
-            angle={isMobile ? -45 : 0}
-            tickFormatter={(unixTime) => {
-              const timeString = new Date(unixTime).toISOString();
-              if (isMobile) {
-                return timeString.slice(5, 10);
-              }
-              return timeString.slice(2, 10);
-            }}
-            type="number"
-          />
-          <Tooltip
-            formatter={tooltipFormatter}
-            labelFormatter={(unixTime) =>
-              `${new Date(unixTime).toLocaleDateString()} - ${new Date(
-                unixTime
-              ).toLocaleTimeString()}`
+      <LineChart
+        width={isMobile ? 350 : 1200}
+        height={isMobile ? 200 : 500}
+        data={data}
+        margin={{
+          top: 5,
+          right: 0,
+          left: 0,
+          bottom: 5,
+        }}
+      >
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis
+          dataKey="time"
+          domain={["dataMin", "dataMax"]}
+          name="Time"
+          angle={isMobile ? -45 : 0}
+          tickFormatter={(unixTime) => {
+            const timeString = new Date(unixTime).toISOString();
+            if (isMobile) {
+              return timeString.slice(5, 10);
             }
-          />
-          <YAxis domain={["auto", "auto"]} />
-          <Legend formatter={legendFormatter} height={36} />
-          <Line type="monotone" dataKey="average" stroke="#FFB5E8" />
-          <Line type="monotone" dataKey="max" stroke="#FF7676" />
-          <Line type="monotone" dataKey="min" stroke="#42E695" />
-        </LineChart>
-      </ResponsiveContainer>
+            return timeString.slice(2, 10);
+          }}
+          type="number"
+        />
+        <YAxis yAxisId="left" />
+        <YAxis yAxisId="right" orientation="right" />
+        <Tooltip
+          labelFormatter={(unixTime) =>
+            `${new Date(unixTime).toLocaleDateString()} - ${new Date(
+              unixTime
+            ).toLocaleTimeString()}`
+          }
+        />
+        <Legend height={36} />
+        <Line
+          dot={false}
+          yAxisId="left"
+          type="monotone"
+          dataKey="max"
+          stroke="#FF7676"
+        />
+        <Line
+          dot={false}
+          yAxisId="left"
+          type="monotone"
+          dataKey="min"
+          stroke="#42E695"
+        />
+        <Line
+          dot={false}
+          yAxisId="right"
+          type="monotone"
+          dataKey="frequency"
+          stroke="#6236FF"
+        />
+        <Line
+          dot={false}
+          yAxisId="left"
+          type="monotone"
+          dataKey="average"
+          stroke="#FFB5E8"
+        />
+      </LineChart>
     </div>
   );
 };
