@@ -33,16 +33,21 @@ const parseLogs = (logs) => {
   }));
   const dates = {};
   let lastDay = getDateString(data1[0].time).slice(8, 10);
+  let lastDateString = getDateString(data1[0].time);
   data1.forEach((log) => {
     const dateString = getDateString(log.time);
     const day = dateString.slice(8, 10);
-    const dayGap = Number(day) - Number(lastDay) - 1;
+    const dayGap = Math.abs(Number(day) - Number(lastDay) - 1);
+    console.log({ day, lastDay, dayGap });
     if (dayGap > 0) {
-      for (let index = 0; index < dayGap; index++) {
-        const missingDateString = `${dateString.slice(0, 8)}${
-          day - (index + 1)
-        }`;
-        dates[missingDateString] = [];
+      let date = new Date(dateString);
+      date.setDate(date.getDate() - 1);
+      let missingDate = new Date(date.getTime());
+      const lastDate = new Date(lastDateString);
+      while (lastDate.getTime() - missingDate.getTime() < 0) {
+        date.setDate(date.getDate() - 1);
+        dates[getDateString(date.getTime())] = [];
+        missingDate = new Date(date.getTime());
       }
     }
     if (dates[dateString]) {
@@ -51,6 +56,7 @@ const parseLogs = (logs) => {
       dates[dateString] = [log];
     }
     lastDay = day;
+    lastDateString = dateString;
   });
   return Object.entries(dates).map(([key, value]) => {
     const time = new Date(key).getTime();
